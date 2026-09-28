@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Финансовый разбор: сведённый баланс, структура расходов за три месяца, долговая нагрузка и порядок погашения долгов.">
+<title>Финансовый разбор — Аня Янченко</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+  :root {
+    --ground: #FFFFFF;
+    --surface: #FFFFFF;
+    --ink: #14181F;
+    --muted: #5A6472;
+    --rule: #E2E6EC;
+    --berry: #D10A4E;
+    --berry-tint: #FFEFF4;
+    --green: #0E7C66;
+    --green-tint: #E9F6F2;
+    --sun: #FFC83D;
+    --sun-tint: #FFF6DF;
+    --sun-ink: #4A3400;
+    --card-shadow: 0 2px 10px rgba(20, 24, 31, .07);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #12151B;
+      --surface: #1A1F27;
+      --ink: #EAEEF3;
+      --muted: #9BA6B4;
+      --rule: #2C333D;
+      --berry: #FF5C8A;
+      --berry-tint: #2C1620;
+      --green: #45C9A7;
+      --green-tint: #13261F;
+      --sun: #FFD166;
+      --sun-tint: #2B2312;
+      --sun-ink: #FFD166;
+      --card-shadow: 0 2px 10px rgba(0, 0, 0, .4);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #12151B;
+    --surface: #1A1F27;
+    --ink: #EAEEF3;
+    --muted: #9BA6B4;
+    --rule: #2C333D;
+    --berry: #FF5C8A;
+    --berry-tint: #2C1620;
+    --green: #45C9A7;
+    --green-tint: #13261F;
+    --sun: #FFD166;
+    --sun-tint: #2B2312;
+    --sun-ink: #FFD166;
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, .4);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0 18px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 700px; margin: 0 auto; }
+
+  section { padding: 36px 0 4px; }
+
+  h1 {
+    font-family: Bitter, Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(36px, 7vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+    margin: 0 0 16px;
+  }
+
+  h2 {
+    font-family: Bitter, Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(23px, 4.2vw, 29px);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    margin: 0 0 18px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  h2 .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: #fff;
+    background: var(--berry);
+    border-radius: 4px;
+    padding: 4px 7px;
+    position: relative;
+    top: -4px;
+    flex: 0 0 auto;
+  }
+
+  h3 { font-size: 17px; font-weight: 600; margin: 0 0 4px; }
+
+  p { margin: 0 0 15px; }
+  p:last-child { margin-bottom: 0; }
+
+  .lead { font-size: 19.5px; line-height: 1.5; margin-bottom: 20px; }
+
+  header.masthead { padding: 52px 0 12px; }
+
+  .badge {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    background: var(--sun);
+    color: #3A2A00;
+    border-radius: 999px;
+    padding: 6px 13px;
+    margin-bottom: 20px;
+  }
+
+  .sig {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--muted);
+    border-top: 2px solid var(--berry);
+    padding-top: 12px;
+    display: inline-block;
+    margin: 6px 0 0;
+  }
+
+  /* карточки-пункты */
+  .cards { display: grid; gap: 10px; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--berry);
+    border-radius: 6px;
+    padding: 15px 17px;
+  }
+
+  .card .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--berry);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .tint-block {
+    background: var(--berry-tint);
+    border-radius: 8px;
+    padding: 22px 22px 8px;
+  }
+
+  .tint-block ul { margin: 0; padding: 0 0 0 4px; list-style: none; }
+
+  .tint-block li {
+    padding: 0 0 14px 26px;
+    position: relative;
+  }
+
+  .tint-block li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--berry);
+  }
+
+  /* шаги */
+  .steps { counter-reset: s; list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+
+  .steps li {
+    counter-increment: s;
+    display: grid;
+    grid-template-columns: 38px 1fr;
+    gap: 14px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 15px 17px;
+  }
+
+  .steps li::before {
+    content: counter(s);
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
+    background: var(--ink);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+  }
+
+  .when {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--ground);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 2px 7px;
+    margin-top: 8px;
+  }
+
+  /* границы */
+  .bounds { display: grid; gap: 14px; }
+  @media (min-width: 640px) { .bounds { grid-template-columns: 1fr 1fr; } }
+
+  .bounds > div { border-radius: 8px; padding: 18px 20px; }
+  .bounds .does { background: var(--green-tint); }
+  .bounds .doesnt { background: var(--surface); border: 1px solid var(--rule); }
+
+  .bounds h3 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .bounds .does h3 { color: var(--green); }
+  .bounds .doesnt h3 { color: var(--muted); }
+
+  .bounds ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; font-size: 16px; line-height: 1.45; }
+  .bounds li { padding-left: 22px; position: relative; }
+  .bounds li::before { position: absolute; left: 0; font-family: "IBM Plex Mono", monospace; font-weight: 600; }
+  .bounds .does li::before { content: "✓"; color: var(--green); }
+  .bounds .doesnt li::before { content: "×"; color: var(--muted); }
+
+  /* цитаты */
+  .quotes { display: grid; gap: 12px; }
+
+  blockquote {
+    margin: 0;
+    background: var(--sun-tint);
+    border-radius: 8px;
+    padding: 20px 22px;
+    font-family: Bitter, Georgia, serif;
+    font-size: 19px;
+    line-height: 1.45;
+  }
+
+  blockquote cite {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-style: normal;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+
+  /* цена */
+  .price {
+    background: var(--surface);
+    border: 2px solid var(--berry);
+    border-radius: 10px;
+    padding: 8px 22px 20px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .price-row:last-of-type { border-bottom: none; }
+  .price-row .label { color: var(--muted); font-size: 16px; }
+  .price-row .label b { color: var(--ink); font-weight: 600; }
+
+  .price-row .sum {
+    font-family: "IBM Plex Mono", monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .price-row.old .sum { text-decoration: line-through; text-decoration-thickness: 2px; color: var(--muted); font-weight: 400; }
+  .price-row.now { background: var(--berry-tint); margin: 0 -22px; padding: 16px 22px; border-bottom: none; }
+  .price-row.now .sum { color: var(--berry); font-size: 27px; }
+  .price-row.now .label b { font-size: 17px; }
+
+  .deadline {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    font-weight: 600;
+    background: var(--sun);
+    color: #3A2A00;
+    border-radius: 4px;
+    padding: 3px 8px;
+    display: inline-block;
+    margin-top: 6px;
+  }
+
+  .price-note { font-size: 15px; color: var(--muted); margin: 16px 0 0; }
+
+  /* CTA */
+  .cta {
+    background: var(--ink);
+    color: var(--ground);
+    border-radius: 10px;
+    padding: 26px;
+  }
+
+  .cta h2 { color: var(--ground); margin-bottom: 12px; }
+  .cta h2 .num { background: var(--sun); color: #3A2A00; }
+  .cta p { color: var(--ground); opacity: .92; }
+
+  .word {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    background: var(--sun);
+    color: #3A2A00;
+    border-radius: 4px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .note {
+    background: var(--surface);
+    border: 1px dashed var(--rule);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 15.5px;
+    color: var(--muted);
+    margin-top: 14px;
+  }
+
+  strong { font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="badge">до 15 октября — 10 000 ₽</span>
+    <h1>Финансовый разбор</h1>
+    <p class="lead">Вы увидите свои деньги целиком: сколько у вас есть на самом деле, сколько вы должны, куда уходит незаметное и в каком порядке гасить долги.</p>
+    <p class="sig">Аня Янченко · бухгалтер · автор «Финкухни»</p>
+  </header>
+
+  <section>
+    <h2><span class="num">01</span>Кому это нужно</h2>
+    <div class="tint-block">
+      <ul>
+        <li>Доход нормальный, а денег к концу месяца нет, и объяснить куда они делись вы не можете.</li>
+        <li>Есть кредит, рассрочки или две-три кредитки, и вы держите в голове только ежемесячный платёж.</li>
+        <li>Вы уже пробовали вести учёт в приложении или таблице. Записывали месяц, а потом бросили: цифры есть, понимания нет.</li>
+        <li>Обязательства набирались под доход, которого сейчас нет.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">02</span>Что вы получите</h2>
+    <div class="cards">
+      <div class="card"><span class="n">БАЛАНС</span>Всё, что у вас есть, минус всё, что вы должны. Одна цифра, которая обычно оказывается неожиданной.</div>
+      <div class="card"><span class="n">РАСХОДЫ ЗА ТРИ МЕСЯЦА</span>Разнесённые по категориям, с суммами. Мелкие регулярные списания, сложенные вместе в одну цифру.</div>
+      <div class="card"><span class="n">ДОЛГОВАЯ НАГРУЗКА</span>Сколько вы отдаёте по обязательствам и какую долю дохода это съедает.</div>
+      <div class="card"><span class="n">ПОРЯДОК ПОГАШЕНИЯ</span>Какой долг гасить первым, какой последним и почему разница выражается в деньгах.</div>
+      <div class="card"><span class="n">ДЕЛЬТА</span>Сколько остаётся между доходом и расходом и что нужно изменить, чтобы она стала другой.</div>
+      <div class="card"><span class="n">ДОКУМЕНТ И ВСТРЕЧА</span>Все расчёты остаются у вас, на часовой встрече я объясняю, что означает каждая цифра.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">03</span>Как проходит</h2>
+    <ol class="steps">
+      <li><div><h3>Бриф-созвон</h3>Разговариваем о вашей ситуации, объясняю, какие документы нужны и зачем.<span class="when">около часа</span></div></li>
+      <li><div><h3>Вы присылаете данные</h3>Выписки и сведения по обязательствам, список ниже.<span class="when">1–3 дня</span></div></li>
+      <li><div><h3>Я считаю</h3>Свожу баланс, проверяю сходимость, разношу расходы, считаю нагрузку и порядок погашения.<span class="when">несколько дней</span></div></li>
+      <li><div><h3>Встреча по документу</h3>Показываю картину целиком и объясняю, что делать дальше и в каком порядке.<span class="when">около часа</span></div></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="num">04</span>Что нужно прислать</h2>
+    <div class="tint-block">
+      <ul>
+        <li>Официальные выписки из банков за три месяца. Именно выписки в PDF, где есть остаток на начало периода, а не скриншоты истории операций.</li>
+        <li>График платежей по кредитам.</li>
+        <li>Лимиты и текущую задолженность по всем кредитным картам.</li>
+        <li>Подтверждаемый доход за тот же период.</li>
+      </ul>
+    </div>
+    <div class="note">Данные я проверяю на сходимость: остаток на начало плюс движения должны давать остаток на конец. Если не сходится, значит есть наличный поток, который в выписки не попадает. Тогда сначала нужен месяц фиксации трат, и это другая работа с другой стоимостью. Об этом я говорю сразу, а не после оплаты.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">05</span>Границы работы</h2>
+    <div class="bounds">
+      <div class="does">
+        <h3>Разбор делает</h3>
+        <ul>
+          <li>Сводит баланс и показывает реальную картину на сегодня</li>
+          <li>Находит регулярные траты, которых вы не замечали</li>
+          <li>Считает долговую нагрузку</li>
+          <li>Проверяет сходимость ваших же данных</li>
+          <li>Объясняет, что означают цифры</li>
+          <li>Помогает наметить порядок действий</li>
+        </ul>
+      </div>
+      <div class="doesnt">
+        <h3>Разбор не делает</h3>
+        <ul>
+          <li>Не обещает рост дохода</li>
+          <li>Не гарантирует, что вы будете следовать плану</li>
+          <li>Не называет конкретную сумму экономии</li>
+          <li>Не обещает закрытие долгов к сроку</li>
+          <li>Не заменяет детальный финансовый план, это отдельная работа</li>
+          <li>Не контролирует ваши траты после разбора</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">06</span>Что говорят после</h2>
+    <div class="quotes">
+      <blockquote>Оказалось, я не узник, а хозяин своей тюрьмы.<cite>из отзыва клиентки</cite></blockquote>
+      <blockquote>Когда у тебя есть финансовая стратегия, чтобы жить, анестезия в виде сладкого просто не нужна.<cite>из отзыва клиентки</cite></blockquote>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">07</span>Стоимость</h2>
+    <div class="price">
+      <div class="price-row old">
+        <span class="label">Полная стоимость разбора</span>
+        <span class="sum">20 000 ₽</span>
+      </div>
+      <div class="price-row now">
+        <span class="label"><b>Сейчас</b><br><span class="deadline">до 15 октября</span></span>
+        <span class="sum">10 000 ₽</span>
+      </div>
+      <div class="price-row">
+        <span class="label">Сверка через месяц, по желанию</span>
+        <span class="sum">5 000 ₽</span>
+      </div>
+      <p class="price-note">Половина цены — за развёрнутый отзыв по итогам работы. С 16 октября разбор стоит двадцать тысяч.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="cta">
+      <h2><span class="num">08</span>Как начать</h2>
+      <p>Напишите мне в директ слово <span class="word">разбор</span>. Я отвечу, задам несколько вопросов о ситуации и скажу честно, нужен вам разбор или хватит одной консультации.</p>
+      <p>Если ваша задача решается проще и дешевле, я так и скажу. Разбор имеет смысл не всем.</p>
+    </div>
+  </section>
+
+  <footer>
+    Аня Янченко · бухгалтерское консультирование для ИП и частных лиц · блог «Финкухня»
+  </footer>
+
+</div>
+</body>
+</html>
