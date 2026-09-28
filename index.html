@@ -253,26 +253,81 @@
   .bounds .does li::before { content: "✓"; color: var(--green); }
   .bounds .doesnt li::before { content: "×"; color: var(--muted); }
 
-  /* цитаты */
-  .quotes { display: grid; gap: 12px; }
+  /* цитаты — лента с листанием */
+  .quotes-wrap { position: relative; }
+
+  .quotes {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+  }
+
+  .quotes::-webkit-scrollbar { display: none; }
 
   blockquote {
     margin: 0;
+    flex: 0 0 86%;
+    scroll-snap-align: center;
     background: var(--sun-tint);
     border-radius: 8px;
-    padding: 20px 22px;
+    padding: 22px 24px;
     font-family: Bitter, Georgia, serif;
     font-size: 19px;
     line-height: 1.45;
+    display: flex;
+    align-items: center;
+    min-height: 150px;
   }
 
-  blockquote cite {
-    display: block;
+  @media (min-width: 640px) {
+    blockquote { flex: 0 0 47%; }
+  }
+
+  .quotes-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .quotes-nav button {
     font-family: "IBM Plex Mono", monospace;
-    font-style: normal;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--berry);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    width: 34px; height: 34px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+
+  .quotes-nav button:hover { border-color: var(--berry); }
+  .quotes-nav button:focus-visible { outline: 2px solid var(--berry); outline-offset: 2px; }
+
+  .dots { display: flex; gap: 6px; margin-left: 4px; }
+
+  .dots span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--rule);
+    transition: background .2s;
+  }
+
+  .dots span.on { background: var(--berry); }
+
+  .swipe-hint {
+    font-family: "IBM Plex Mono", monospace;
     font-size: 12px;
     color: var(--muted);
-    margin-top: 10px;
+    margin-left: auto;
   }
 
   /* цена */
@@ -454,9 +509,19 @@
 
   <section>
     <h2><span class="num">06</span>Что говорят после</h2>
-    <div class="quotes">
-      <blockquote>Ты мне сейчас говоришь, что я делаю ногти в кредит? Да ведь так оно и есть. И в ресторан я хожу в кредит.<cite>клиентка, в момент разбора</cite></blockquote>
-      <blockquote>Какая подушка безопасности, когда столько долгов. Я взяла деньги с накопительного и закрыла один кредит. Открываю — там ноль. Такая гора с плеч.<cite>та же клиентка, через месяц</cite></blockquote>
+    <div class="quotes-wrap">
+      <div class="quotes" id="quotes">
+        <blockquote>«Ты мне сейчас говоришь, что я делаю ногти в кредит? Да ведь так оно и есть. И в ресторан я хожу в кредит»</blockquote>
+        <blockquote>«Какая подушка безопасности, когда столько долгов? Я взяла деньги с накопительного и закрыла один кредит. Открываю, а там ноль. Такая гора с плеч»</blockquote>
+        <blockquote>«Оказалось, я не узник, а хозяин своей тюрьмы»</blockquote>
+        <blockquote>«Когда у тебя есть финансовая стратегия, чтобы жить, анестезия в виде сладкого просто не нужна»</blockquote>
+      </div>
+      <div class="quotes-nav">
+        <button type="button" id="qprev" aria-label="Предыдущий отзыв">‹</button>
+        <button type="button" id="qnext" aria-label="Следующий отзыв">›</button>
+        <div class="dots" id="qdots"><span class="on"></span><span></span><span></span><span></span></div>
+        <span class="swipe-hint">листайте →</span>
+      </div>
     </div>
   </section>
 
@@ -492,5 +557,28 @@
   </footer>
 
 </div>
+
+<script>
+  (function () {
+    var box = document.getElementById('quotes');
+    var dots = document.getElementById('qdots').children;
+    if (!box) return;
+
+    function step() {
+      var card = box.querySelector('blockquote');
+      return card ? card.getBoundingClientRect().width + 12 : box.clientWidth;
+    }
+
+    document.getElementById('qprev').onclick = function () { box.scrollBy({ left: -step() }); };
+    document.getElementById('qnext').onclick = function () { box.scrollBy({ left: step() }); };
+
+    box.addEventListener('scroll', function () {
+      var i = Math.round(box.scrollLeft / step());
+      for (var k = 0; k < dots.length; k++) {
+        dots[k].className = (k === i) ? 'on' : '';
+      }
+    }, { passive: true });
+  })();
+</script>
 </body>
 </html>
